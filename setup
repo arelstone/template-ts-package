@@ -1,17 +1,13 @@
 REPO_NAME=$(basename -s .git $(git config --get remote.origin.url))
-NPM_USER=$(npm whoami --registry https://npm.pkg.github.com --scope=@paralenz)
 
 sed -e "s|%name%|${REPO_NAME}|i" templates/package.templ | tee package.json
 echo "✅ package.json created"
 
-sed -e "s|%name%|${REPO_NAME}|i" templates/readme.tmpl | tee README.md
-echo "✅ README created"
+mv templates/pull-request.yml .github/workflows/pull-request.yml
+mv templates/push-to-master.yml .github/workflows/push-to-master.yml
+echo "✅ Workflow files created"
 
-mv templates/pull-request.tmpl .github/workflows/pull-request.yml
-mv templates/push-to-master.tmpl .github/workflows/push-to-master.yml
-echo "✅ Workflows created"
-
-sed -e "s|%github_user%|${NPM_USER}|i" templates/dependabot.tmpl | tee .github/dependabot.yml
+mv templates/dependabot.yml .github/dependabot.yml
 echo "✅ Dependabot file created"
 
 rm -rf templates
